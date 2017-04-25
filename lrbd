@@ -1220,7 +1220,7 @@ class Backstores(object):
     def _detect(self):
         """
         Check for existing backstores and set selected, otherwise default
-        All images will be either iblock or rbd.  Last checked wins.
+        All images will be either block or rbd.  Last checked wins.
         """
         for pentry, gentry, entry in entries():
             existing = Runtime.core("*/{}".format(entry['image']))
@@ -1376,9 +1376,9 @@ class Iscsi(object):
                 self.iqns.insert(0, entry['target'])
             else:
                 self.iqns.append(entry['target'])
-            if 'hosts' in entry and Runtime.config['backstore'] == "iblock":
+            if 'hosts' in entry and Runtime.config['backstore'] == "block":
                 logging.warning("Multiple gateway targets not supported " +
-                                "with iblock backend, use rbd backend\n")
+                                "with block backend, use rbd backend\n")
 
 
     def _assign_vendor(self):
@@ -2031,7 +2031,7 @@ class Luns(object):
         else:
             cmd = ["targetcli",
                    "/{}/{}/tpg{}/luns".format(Runtime.fabric, target, tpg),
-                   "create", "/backstores/iblock/{}".format(self.name)]
+                   "create", "/backstores/block/{}".format(self.name)]
 
         _lun = self.lun_assignment.assigned(target, image)
         if _lun:
@@ -2828,9 +2828,9 @@ if __name__ == "__main__":
                         help='print DEBUG messages')
     parser.add_argument('-m', '--migrate', action='store', dest='migrate',
                         help='output migrated configuration', metavar='version')
-    parser.add_argument('-I', '--iblock', action='store_const',
-                        dest='backstore', const='iblock',
-                        help='set the backstore to iblock, defaults to rbd')
+    parser.add_argument('-I', '--block', action='store_const',
+                        dest='backstore', const='block',
+                        help='set the backstore to block, defaults to rbd')
     parser.add_argument('-R', '--rbd', action='store_const', dest='backstore',
                         const='rbd',
                         help='set the backstore to rbd')
